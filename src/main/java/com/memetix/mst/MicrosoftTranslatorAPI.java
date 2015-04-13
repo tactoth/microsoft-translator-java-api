@@ -88,7 +88,7 @@ public abstract class MicrosoftTranslatorAPI {
      * Sets the Client ID.
      * All new applications should obtain a ClientId and Client Secret by following 
      * the guide at: http://msdn.microsoft.com/en-us/library/hh454950.aspx
-     * @param pKey The Client Id.
+     * @param pClientId The Client Id.
      */
     public static void setClientId(final String pClientId) {
     	clientId = pClientId;
@@ -98,7 +98,7 @@ public abstract class MicrosoftTranslatorAPI {
      * Sets the Client Secret.
      * All new applications should obtain a ClientId and Client Secret by following 
      * the guide at: http://msdn.microsoft.com/en-us/library/hh454950.aspx
-     * @param pKey The Client Secret.
+     * @param pClientSecret The Client Secret.
      */
     public static void setClientSecret(final String pClientSecret) {
     	clientSecret = pClientSecret;
