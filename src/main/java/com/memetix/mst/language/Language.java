@@ -18,6 +18,8 @@
 package com.memetix.mst.language;
 
 import com.memetix.mst.MicrosoftTranslatorAPI;
+
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
@@ -30,50 +32,83 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @author Jonathan Griggs <jonathan.griggs at gmail.com>
  */
-public enum Language {
-    AUTO_DETECT(""),
-    ARABIC("ar"),
-    BULGARIAN("bg"),
-    CATALAN("ca"),
-    CHINESE_SIMPLIFIED("zh-CHS"),
-    CHINESE_TRADITIONAL("zh-CHT"),
-    CZECH("cs"),
-    DANISH("da"),
-    DUTCH("nl"),
-    ENGLISH("en"),
-    ESTONIAN("et"),
-    FINNISH("fi"),
-    FRENCH("fr"),
-    GERMAN("de"),
-    GREEK("el"),
-    HAITIAN_CREOLE("ht"),
-    HEBREW("he"),
-    HINDI("hi"),
-    HMONG_DAW("mww"),
-    HUNGARIAN("hu"),
-    INDONESIAN("id"),
-    ITALIAN("it"),
-    JAPANESE("ja"),
-    KOREAN("ko"),
-    LATVIAN("lv"),
-    LITHUANIAN("lt"),
-    MALAY("ms"),
-    NORWEGIAN("no"),
-    PERSIAN("fa"),
-    POLISH("pl"),
-    PORTUGUESE("pt"),
-    ROMANIAN("ro"),
-    RUSSIAN("ru"),
-    SLOVAK("sk"),
-    SLOVENIAN("sl"),
-    SPANISH("es"),
-    SWEDISH("sv"),
-    THAI("th"),
-    TURKISH("tr"),
-    UKRAINIAN("uk"),
-    URDU("ur"),
-    VIETNAMESE("vi");
-	
+public class Language implements Serializable {
+    private static final Map<String, Language> s_languages = new HashMap<String, Language>();
+
+    // pre-defined languages
+    public static final Language AUTO_DETECT = get("");
+    public static final Language ARABIC = get("ar");
+    public static final Language BULGARIAN = get("bg");
+    public static final Language CATALAN = get("ca");
+    public static final Language CHINESE_SIMPLIFIED = get("zh-CHS");
+    public static final Language CHINESE_TRADITIONAL = get("zh-CHT");
+    public static final Language CZECH = get("cs");
+    public static final Language DANISH = get("da");
+    public static final Language DUTCH = get("nl");
+    public static final Language ENGLISH = get("en");
+    public static final Language ESTONIAN = get("et");
+    public static final Language FINNISH = get("fi");
+    public static final Language FRENCH = get("fr");
+    public static final Language GERMAN = get("de");
+    public static final Language GREEK = get("el");
+    public static final Language HAITIAN_CREOLE = get("ht");
+    public static final Language HEBREW = get("he");
+    public static final Language HINDI = get("hi");
+    public static final Language HMONG_DAW = get("mww");
+    public static final Language HUNGARIAN = get("hu");
+    public static final Language INDONESIAN = get("id");
+    public static final Language ITALIAN = get("it");
+    public static final Language JAPANESE = get("ja");
+    public static final Language KOREAN = get("ko");
+    public static final Language LATVIAN = get("lv");
+    public static final Language LITHUANIAN = get("lt");
+    public static final Language MALAY = get("ms");
+    public static final Language NORWEGIAN = get("no");
+    public static final Language PERSIAN = get("fa");
+    public static final Language POLISH = get("pl");
+    public static final Language PORTUGUESE = get("pt");
+    public static final Language ROMANIAN = get("ro");
+    public static final Language RUSSIAN = get("ru");
+    public static final Language SLOVAK = get("sk");
+    public static final Language SLOVENIAN = get("sl");
+    public static final Language SPANISH = get("es");
+    public static final Language SWEDISH = get("sv");
+    public static final Language THAI = get("th");
+    public static final Language TURKISH = get("tr");
+    public static final Language UKRAINIAN = get("uk");
+    public static final Language URDU = get("ur");
+    public static final Language VIETNAMESE = get("vi");
+
+    private static synchronized Language get(String languageCode) {
+        Language language = s_languages.get(languageCode);
+        if (language == null) {
+            language = new Language(languageCode);
+            s_languages.put(languageCode, language);
+        }
+
+        return language;
+    }
+
+    public static void loadAllAvailableLanguages() throws Exception {
+        List<String> codesForTranslation = getLanguageCodesForTranslation();
+
+        synchronized (Language.class) {
+            for (String code : codesForTranslation) {
+                Language language = get(code);
+                System.out.println("Inserted language: " + language);
+            }
+        }
+    }
+
+    public static synchronized Language fromString(final String pLanguage) {
+        return s_languages.get(pLanguage);
+    }
+
+    public static Language[] values() {
+        Collection<Language> values_ = s_languages.values();
+        return values_.toArray(new Language[values_.size()]);
+    }
+
     /**
      * Microsoft's String representation of this language.
      */
@@ -91,23 +126,19 @@ public enum Language {
 	private Language(final String pLanguage) {
 		language = pLanguage;
 	}
-	
-	public static Language fromString(final String pLanguage) {
-		for (Language l : values()) {
-			if (l.toString().equals(pLanguage)) {
-				return l;
-			}
-		}
-		return null;
-	}
-	
-	/**
+
+    public String getCode() {
+        return language;
+    }
+
+
+    /**
 	 * Returns the String representation of this language.
 	 * @return The String representation of this language.
 	 */
 	@Override
 	public String toString() {
-		return language;
+		return getCode();
 	}
         
         public static void setKey(String pKey) {
@@ -182,7 +213,7 @@ public enum Language {
             Map<String,Language>localizedMap = new TreeMap<String,Language>(); 
             for(Language lang : Language.values()) {
                 if(lang==Language.AUTO_DETECT)
-                    localizedMap.put(Language.AUTO_DETECT.name(), lang);
+                    localizedMap.put(Language.AUTO_DETECT.getCode(), lang);
                 else
                     localizedMap.put(lang.getName(locale), lang);
             }
@@ -206,7 +237,6 @@ public enum Language {
         /**
          * Detects the language of a supplied String.
          * 
-         * @param text The String to detect the language of.
          * @return A DetectResult object containing the language, confidence and reliability.
          * @throws Exception on error.
          */
@@ -236,7 +266,6 @@ public enum Language {
         /**
          * Detects the language of a supplied String.
          * 
-         * @param text The String to detect the language of.
          * @return A DetectResult object containing the language, confidence and reliability.
          * @throws Exception on error.
          */

@@ -70,18 +70,6 @@ public class LanguageTest {
     }
 
     /**
-     * Test of valueOf method, of class Language.
-     */
-    @Test
-    public void testValueOf() {
-        String name = "ENGLISH";
-        Language expResult = Language.ENGLISH;
-        Language result = Language.valueOf(name);
-        assertEquals(expResult, result);
-
-    }
-
-    /**
      * Test of fromString method, of class Language.
      */
     @Test

@@ -8,7 +8,7 @@
 
   <name>microsoft-translator-java-api</name>
   <description>A Java wrapper for the Microsoft Translator API</description>
-  <url>http://github.com/boatmeme/microsoft-translator-java-api</url>
+  <url>http://github.com/tactoth/microsoft-translator-java-api</url>
   
   <parent>
     <groupId>org.sonatype.oss</groupId>
