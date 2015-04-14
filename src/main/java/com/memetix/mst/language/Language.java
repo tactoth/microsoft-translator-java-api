@@ -89,9 +89,7 @@ public class Language implements Serializable {
         return language;
     }
 
-    public static void loadAllAvailableLanguages() throws Exception {
-        List<String> codesForTranslation = getLanguageCodesForTranslation();
-
+    public static void insertLanguageCodes(List<String> codesForTranslation) {
         synchronized (Language.class) {
             for (String code : codesForTranslation) {
                 Language language = get(code);
